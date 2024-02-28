@@ -29,6 +29,7 @@ func NewGoLevelDB(name string, dir string) (*GoLevelDB, error) {
 			CompactionL0Trigger:					8,
 			BlockCacheCapacity:						64 * opt.MiB,
 			WriteBuffer:							64 * opt.MiB,
+			BlockSize:								64 * opt.KiB, // def 4
 			Filter: filter.NewBloomFilter(32),
 			NoSync:									true, //default false
 			DisableCompactionBackoff:				true, // def false
