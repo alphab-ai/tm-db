@@ -8,6 +8,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/errors"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/syndtr/goleveldb/leveldb/util"
+	"github.com/syndtr/goleveldb/leveldb/filter"
 )
 
 func init() {
@@ -24,7 +25,16 @@ type GoLevelDB struct {
 var _ DB = (*GoLevelDB)(nil)
 
 func NewGoLevelDB(name string, dir string) (*GoLevelDB, error) {
-	return NewGoLevelDBWithOpts(name, dir, nil)
+		o := &opt.Options{
+			CompactionL0Trigger:					8,
+			BlockCacheCapacity:						64 * opt.MiB,
+			WriteBuffer:							64 * opt.MiB,
+			Filter: filter.NewBloomFilter(32),
+			NoSync:									true, //default false
+			DisableCompactionBackoff:				true, // def false
+			DisableSeeksCompaction:					true, // def false
+		}
+		return NewGoLevelDBWithOpts(name, dir, o)
 }
 
 func NewGoLevelDBWithOpts(name string, dir string, o *opt.Options) (*GoLevelDB, error) {
